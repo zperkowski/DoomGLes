@@ -3,7 +3,7 @@
 .DS_Store
 /build
 /captures
-
+.idea/
 
 # Created by https://www.gitignore.io/api/osx,linux,android,windows,intellij,androidstudio
 
