@@ -16,10 +16,10 @@ class Floor {
     // (3 3D coords per point) + ( 2 2D coords for texture) * (4 points)
     private static final int VERTEXES_SIZE = (3 + 2) * 4;
     private float vertices[] = {
-            -50.0f, 0.0f, -50.0f, 0.0f, 1.0f, // Left bottom
-            50.0f, 0.0f, -50.0f, 0.0f, 0.0f,  // Left up
-            50.0f, 0.0f, 50.0f, 1.0f, 0.0f,   // Right up
-            -50.0f, 0.0f, 50.0f, 1.0f, 1.0f   // Right bottom
+            -50.0f, -50.0f, 0.0f, 0.0f, 1.0f, // Left bottom
+            50.0f, -50.0f, 0.0f, 0.0f, 0.0f,  // Left up
+            50.0f, 50.0f, 0.0f, 1.0f, 0.0f,   // Right up
+            -50.0f, 50.0f, 0.0f, 1.0f, 1.0f   // Right bottom
     };
 
     Floor(int textureId) {

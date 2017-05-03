@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameMainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
