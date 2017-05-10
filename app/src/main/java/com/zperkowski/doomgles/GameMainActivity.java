@@ -134,20 +134,26 @@ public class GameMainActivity extends AppCompatActivity {
             displayRatio = (float) width / height;
             gl10.glMatrixMode(GL10.GL_PROJECTION);
             gl10.glLoadIdentity();
+            gl10.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 //            gl10.glFrustumf(-displayRatio, displayRatio, -1, 1, 1, 100);
-            GLU.gluPerspective(gl10, 45.0f, displayRatio, 0.1f, 100.0f);
         }
 
         @Override
         public void onDrawFrame(GL10 gl10) {
             Log.d(TAG, "DoomGLRenderer.onDrawFrame(GL10 gl10)");
-            gl10.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            gl10.glMatrixMode(GL10.GL_PROJECTION);
+            gl10.glLoadIdentity();
+            GLU.gluPerspective(gl10, 45.0f, displayRatio, 0.1f, 100.0f);
+            gl10.glMultMatrixf(rotationMatrix, 0);      // Camera rotation
+            gl10.glTranslatef(0.0f, 0.0f, -10.0f);        // Camera position
             gl10.glClear(GL10.GL_COLOR_BUFFER_BIT);
             gl10.glMatrixMode(GL10.GL_MODELVIEW);
             gl10.glLoadIdentity();
-            gl10.glTranslatef(0.0f, -2.0f, -30.0f);
-            gl10.glMultMatrixf(rotationMatrix, 0);
-            floor.draw(gl10);
+            drawAllModels(gl10);
         }
+    }
+
+    void drawAllModels(GL10 gl10) {
+        floor.draw(gl10);
     }
 }
