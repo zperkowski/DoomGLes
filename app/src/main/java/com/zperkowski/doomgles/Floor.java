@@ -11,6 +11,8 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 class Floor {
+    static final String TAG = "Floor";
+
     private int textureId;
     private FloatBuffer vertexBuffer;
     // (3 3D coords per point) + ( 2 2D coords for texture) * (4 points)

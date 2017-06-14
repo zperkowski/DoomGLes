@@ -9,16 +9,17 @@ import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import min3d.core.Object3dContainer;
+import min3d.core.RendererActivity;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class GameMainActivity extends AppCompatActivity {
-
+public class GameMainActivity extends RendererActivity {
     private static String TAG = "GameMainActivity";
 
     private DoomGLRenderer renderer;
@@ -26,7 +27,6 @@ public class GameMainActivity extends AppCompatActivity {
     private Floor floor;
     private Bitmap floorTexture;
     private SensorManager sensorManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate(Bundle savedInstanceState()");
@@ -96,7 +96,7 @@ public class GameMainActivity extends AppCompatActivity {
         }
 
         public void onSensorChanged(SensorEvent event) {
-            Log.d(TAG, "DoomGLRenderer.onSensorChanged(SensorEvent event)");
+            // Log.d(TAG, "DoomGLRenderer.onSensorChanged(SensorEvent event)");
             // we received a sensor event. it is a good practice to check
             // that we received the proper event
             if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
@@ -129,7 +129,7 @@ public class GameMainActivity extends AppCompatActivity {
 
         @Override
         public void onSurfaceChanged(GL10 gl10, int width, int height) {
-            Log.d(TAG, "DoomGLRenderer.onSurfaceChanged() Surface changed. Width=" + width + " Height=" + height);
+            // Log.d(TAG, "DoomGLRenderer.onSurfaceChanged() Surface changed. Width=" + width + " Height=" + height);
             gl10.glViewport(0, 0, width, height);
             displayRatio = (float) width / height;
             gl10.glMatrixMode(GL10.GL_PROJECTION);
@@ -140,7 +140,7 @@ public class GameMainActivity extends AppCompatActivity {
 
         @Override
         public void onDrawFrame(GL10 gl10) {
-            Log.d(TAG, "DoomGLRenderer.onDrawFrame(GL10 gl10)");
+            // Log.d(TAG, "DoomGLRenderer.onDrawFrame(GL10 gl10)");
             gl10.glMatrixMode(GL10.GL_PROJECTION);
             gl10.glLoadIdentity();
             GLU.gluPerspective(gl10, 45.0f, displayRatio, 0.1f, 100.0f);
