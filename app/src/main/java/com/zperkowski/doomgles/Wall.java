@@ -10,24 +10,24 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by zperkowski on 20/04/2017.
+ * Created by zperkowski on 14/06/2017.
  */
 
-class Floor {
-    static final String TAG = "Floor";
+class Wall {
+    static final String TAG = "Wall";
 
     private int textureId;
     private FloatBuffer vertexBuffer;
     // (3 3D coords per point) + ( 2 2D coords for texture) * (4 points)
     private static final int VERTEXES_SIZE = (3 + 2) * 4;
     private float vertices[] = {
-            -50.0f, -50.0f, 0.0f, 0.0f, 1.0f, // Left bottom
-            50.0f, -50.0f, 0.0f, 0.0f, 0.0f,  // Left up
-            50.0f, 50.0f, 0.0f, 1.0f, 0.0f,   // Right up
-            -50.0f, 50.0f, 0.0f, 1.0f, 1.0f   // Right bottom
+            -50.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Left bottom
+            -50.0f, 0.0f, 50.0f, 0.0f, 1.0f,  // Left up
+            50.0f, 0.0f, 50.0f, 1.0f, 1.0f,   // Right up
+            50.0f, 0.0f, 0.0f, 1.0f, 0.0f   // Right bottom
     };
 
-    Floor(GL10 gl10, Bitmap texture) {
+    Wall(GL10 gl10, Bitmap texture) {
         int textureIds[] = new int[1];
         gl10.glGenTextures(1, textureIds, 0);
         gl10.glBindTexture(GL10.GL_TEXTURE_2D, textureIds[0]);

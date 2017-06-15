@@ -8,12 +8,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import min3d.core.Object3dContainer;
 import min3d.core.RendererActivity;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -25,7 +23,8 @@ public class GameMainActivity extends RendererActivity {
     private DoomGLRenderer renderer;
     private GLSurfaceView glSurfaceView;
     private Floor floor;
-    private Bitmap floorTexture;
+    private Wall wall1, wall2, wall3, wall4;
+    private Bitmap texture;
     private SensorManager sensorManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,17 +113,16 @@ public class GameMainActivity extends RendererActivity {
         @Override
         public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
             Log.d(TAG,  "DoomGLRenderer.onSurfaceCreated() Surface created");
-            floorTexture = BitmapFactory.decodeResource(getResources(), R.drawable.floor_texture);
-            Log.d(TAG, floorTexture.toString());
-            int textureIds[] = new int[1];
-            gl10.glGenTextures(1, textureIds, 0);
-            gl10.glBindTexture(GL10.GL_TEXTURE_2D, textureIds[0]);
-            GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, floorTexture, 0);
-            gl10.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-            gl10.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
-            gl10.glBindTexture(GL10.GL_TEXTURE_2D, 0);
-            floorTexture.recycle();
-            floor = new Floor(textureIds[0]);
+            // Floor
+            texture = BitmapFactory.decodeResource(getResources(), R.drawable.floor_texture);
+            floor = new Floor(gl10, texture);
+            texture.recycle();
+
+            // Wall
+            texture = BitmapFactory.decodeResource(getResources(), R.drawable.wall_texture);
+            wall1 = new Wall(gl10, texture);
+            texture.recycle();
+
         }
 
         @Override
@@ -143,7 +141,7 @@ public class GameMainActivity extends RendererActivity {
             // Log.d(TAG, "DoomGLRenderer.onDrawFrame(GL10 gl10)");
             gl10.glMatrixMode(GL10.GL_PROJECTION);
             gl10.glLoadIdentity();
-            GLU.gluPerspective(gl10, 45.0f, displayRatio, 0.1f, 100.0f);
+            GLU.gluPerspective(gl10, 45.0f, displayRatio, 0.1f, 150.0f);
             gl10.glMultMatrixf(rotationMatrix, 0);      // Camera rotation
             gl10.glTranslatef(0.0f, 0.0f, -10.0f);        // Camera position
             gl10.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -155,5 +153,7 @@ public class GameMainActivity extends RendererActivity {
 
     void drawAllModels(GL10 gl10) {
         floor.draw(gl10);
+        gl10.glTranslatef(0.0f, 100.0f, 0.0f);
+        wall1.draw(gl10);
     }
 }
