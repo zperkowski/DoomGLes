@@ -121,6 +121,9 @@ public class GameMainActivity extends RendererActivity {
             // Wall
             texture = BitmapFactory.decodeResource(getResources(), R.drawable.wall_texture);
             wall1 = new Wall(gl10, texture);
+            wall2 = new Wall(gl10, texture);
+            wall3 = new Wall(gl10, texture);
+            wall4 = new Wall(gl10, texture);
             texture.recycle();
 
         }
@@ -153,7 +156,14 @@ public class GameMainActivity extends RendererActivity {
 
     void drawAllModels(GL10 gl10) {
         floor.draw(gl10);
-        gl10.glTranslatef(0.0f, 100.0f, 0.0f);
+        gl10.glTranslatef(0.0f, 50.0f, 0.0f);
         wall1.draw(gl10);
+        gl10.glTranslatef(0.0f, -100.0f, 0.0f);
+        wall2.draw(gl10);
+        gl10.glTranslatef(50.0f, 50.0f, 0.0f);
+        gl10.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+        wall3.draw(gl10);
+        gl10.glTranslatef(0.0f, 100.0f, 0.0f);
+        wall4.draw(gl10);
     }
 }
