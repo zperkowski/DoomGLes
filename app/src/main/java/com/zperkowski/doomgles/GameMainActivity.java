@@ -10,6 +10,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import min3d.core.RendererActivity;
@@ -26,6 +27,11 @@ public class GameMainActivity extends RendererActivity {
     private Wall wall1, wall2, wall3, wall4;
     private Bitmap texture;
     private SensorManager sensorManager;
+    private int windowHight;
+    private int windowWidth;
+    private boolean touchStarted = false;
+    private int touchPositionX = 0;
+    private int touchPositionY = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate(Bundle savedInstanceState()");
@@ -67,7 +73,23 @@ public class GameMainActivity extends RendererActivity {
         glSurfaceView.onPause();
     }
 
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        glSurfaceView.queueEvent(new Runnable(){
+            public void run() {
+                touchPositionX = (int)event.getX();
+                touchPositionY = (int)event.getY();
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN)
+                    touchStarted = true;
+                else if (action == MotionEvent.ACTION_UP)
+                    touchStarted = false;
+            }});
+        return true;
+    }
+
     class DoomGLRenderer implements GLSurfaceView.Renderer, SensorEventListener {
+        private float cameraX, cameraY, cameraZ;
         float displayRatio;
         private Sensor rotationVectorSensor;
         private final float[] rotationMatrix = new float[16];
@@ -126,11 +148,16 @@ public class GameMainActivity extends RendererActivity {
             wall4 = new Wall(gl10, texture);
             texture.recycle();
 
+            // Camera
+            cameraX = cameraY = 0.0f;
+            cameraZ = -10.0f;
         }
 
         @Override
         public void onSurfaceChanged(GL10 gl10, int width, int height) {
             // Log.d(TAG, "DoomGLRenderer.onSurfaceChanged() Surface changed. Width=" + width + " Height=" + height);
+            windowHight = height;
+            windowWidth = width;
             gl10.glViewport(0, 0, width, height);
             displayRatio = (float) width / height;
             gl10.glMatrixMode(GL10.GL_PROJECTION);
@@ -146,11 +173,32 @@ public class GameMainActivity extends RendererActivity {
             gl10.glLoadIdentity();
             GLU.gluPerspective(gl10, 45.0f, displayRatio, 0.1f, 150.0f);
             gl10.glMultMatrixf(rotationMatrix, 0);      // Camera rotation
-            gl10.glTranslatef(0.0f, 0.0f, -10.0f);        // Camera position
+            gl10.glTranslatef(cameraX, cameraY, cameraZ);// Camera position
+            if (touchStarted)
+                touchedScreen(touchPositionX, touchPositionY);
             gl10.glClear(GL10.GL_COLOR_BUFFER_BIT);
             gl10.glMatrixMode(GL10.GL_MODELVIEW);
             gl10.glLoadIdentity();
             drawAllModels(gl10);
+        }
+
+        void touchedScreen(int x, int y) {
+            if (x > 0 && x < windowWidth * 0.3)
+                renderer.moveCamera(-1);
+            else if (x < windowWidth * 0.6)
+                Log.d(TAG, "Shoot");
+            else if (x > windowWidth * 0.6 && x < windowWidth)
+                renderer.moveCamera(1);
+        }
+
+        void moveCamera(int direction) {
+            float tmpX = cameraX + rotationMatrix[4] * 0.5f * Math.signum(direction);
+            float tmpY = cameraY + rotationMatrix[6] * 0.5f * Math.signum(direction);
+            if (tmpX > -49.9 && tmpX < 49.9
+                    && tmpY > -49.9 && tmpY < 49.9) {
+                cameraX = tmpX;
+                cameraY = tmpY;
+            }
         }
     }
 
